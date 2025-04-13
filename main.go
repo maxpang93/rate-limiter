@@ -50,6 +50,7 @@ func (tb *TokenBucket) allowRequest() bool {
 
 	if tb.tokens > 0 {
 		tb.tokens--
+		log.Printf("Request allowed, remaining tokens: %d", tb.tokens)
 		return true
 	}
 	return false
@@ -66,7 +67,7 @@ func main() {
 		log.Printf("Client IP: %s", clientIP)
 		bucket := getTokenBucket(clientIP)
 		if !bucket.allowRequest() {
-			c.JSON(http.StatusTooManyRequests, gin.H{"error": "Rate limit exceeded"})
+			c.JSON(http.StatusTooManyRequests, gin.H{"error": "Too Many Requests"})
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
